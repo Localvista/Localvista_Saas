@@ -25,7 +25,10 @@ SECRET_KEY = 'django-insecure-2k2wxt&q-z7&mt954etk-z8f&b0j)9ja^%sw^ydp_2==164zgm
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '172.29.3.133',
+    '127.0.0.1'
+    ]
 
 
 # Application definition
@@ -144,4 +147,5 @@ CSRF_TRUSTED_ORIGINS = [
 
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / "static"
+# STATIC_ROOT = BASE_DIR / "static"
+STATICFILES_DIRS = [BASE_DIR / "static"]

@@ -1,13 +1,15 @@
 from .models import Cuisine  
 from django.contrib.auth import login, logout
 from django.shortcuts import render, redirect
+from rest_framework.permissions import AllowAny
 from .models import Account
 from .serializers import AccountSerializer, UserSerializer, BusinessAccountSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
-from .serializers import UserSerializer,BusinessAccountSerializer
+# from .serializers import UserSerializer,BusinessAccountSerializer
+from rest_framework.generics import RetrieveAPIView
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from Business.serializers import CuisineSerializer, ImageSerializer, ReviewSerializer
@@ -94,25 +96,10 @@ class UserDetailsView(generics.RetrieveAPIView):
     def get_object(self):
         return self.request.user
 
-# class AccountLoginView(APIView):
-#     def post(self, request):
-#         username = request.data.get('username')
-#         password = request.data.get('password')
-#         user = Account.objects.get(username=username)
-#         if user.check_password(password):
-#             login(request, user)
 
-#             token, created = Token.objects.get_or_create(user=user)
-
-#             return Response({'token': token.key, 'user_id': user.id}, status=status.HTTP_200_OK)
-#         return Response({'detail': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
-
-# class AccountLogoutView(APIView):
-#     permission_classes = [permissions.IsAuthenticated]
-
-#     def post(self, request):
-#         logout(request)
-#         return Response(status=status.HTTP_200_OK)
+class BusinessAccountDetailView(RetrieveAPIView):
+    queryset = BusinessAccount.objects.all()
+    serializer_class = BusinessAccountSerializer
 
 class AccountLoginView(APIView):
     def post(self, request):
@@ -130,3 +117,16 @@ class AccountLogoutView(APIView):
     def post(self, request):
         logout(request)  # Log the user out of their session
         return Response(status=status.HTTP_200_OK)
+
+
+class SignupView(APIView):
+    permission_classes = [AllowAny]  # Allow unauthenticated users to access this view.
+
+    def post(self, request):
+        serializer = AccountSerializer(data=request.data)
+
+        if serializer.is_valid():
+            user = serializer.save()
+            login(request, user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

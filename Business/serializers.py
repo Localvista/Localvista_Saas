@@ -13,7 +13,12 @@ class ImageSerializer(serializers.ModelSerializer):
 
 class ReviewSerializer(serializers.ModelSerializer):
     images = ImageSerializer(many=True)
+    # user_username = serializers.SerializerMethodField()
 
     class Meta:
         model = Review
         fields = '__all__'
+
+    
+
+        

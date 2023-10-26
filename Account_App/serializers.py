@@ -7,12 +7,13 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = '__all__'
 
+
+
 class BusinessAccountSerializer(serializers.ModelSerializer):
-    cuisines = CuisineSerializer(many=True) 
-    Reviews = ReviewSerializer(many=True) 
-    images= ImageSerializer(many=True) 
+    cuisines = CuisineSerializer(many=True)
+    images = ImageSerializer(many=True)
     menu= ImageSerializer(many=True)
-    
+
     avg_rating = serializers.SerializerMethodField()
 
     class Meta:
@@ -25,6 +26,9 @@ class BusinessAccountSerializer(serializers.ModelSerializer):
             total_rating = sum(review.rating for review in reviews)
             return total_rating / len(reviews)
         return 0.0  
+
+
+
 
 class AccountSerializer(serializers.ModelSerializer):
     user_profile = UserSerializer(required=False)
